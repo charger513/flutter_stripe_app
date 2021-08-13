@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
         'home': (_) => HomePage(),
         'pago_completo': (_) => PagoCompletoPage(),
       },
-      theme: ThemeData.dark().copyWith(
-        primaryColor: Color(0xff284879),
-        scaffoldBackgroundColor: Color(0xff21232A),
+      theme: ThemeData.light().copyWith(
+        primaryColor: const Color(0xff284879),
+        scaffoldBackgroundColor: const Color(0xff21232A),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_stripe_app/data/tarjetas.dart';
+import 'package:flutter_stripe_app/widgets/total_pay_button.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -8,10 +9,10 @@ class HomePage extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pagar'),
+        title: const Text('Pagar'),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {},
           ),
         ],
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
             top: 200,
             child: PageView.builder(
               controller: PageController(viewportFraction: 0.9),
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: tarjetas.length,
               itemBuilder: (_, i) {
                 final tarjeta = tarjetas[i];
@@ -37,6 +38,10 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: TotalPayButton(),
           ),
         ],
       ),
