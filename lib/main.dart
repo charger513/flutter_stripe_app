@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe_app/bloc/pagar/pagar_bloc.dart';
 import 'package:flutter_stripe_app/pages/pago_completo_page.dart';
+import 'package:flutter_stripe_app/services/stripe_service.dart';
 
 import 'pages/home_page.dart';
 
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
       ),
     );
+
+    // Iniciar StripeService
+    StripeService().init();
 
     return MultiBlocProvider(
       providers: [
