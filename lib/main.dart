@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'StripeApp',
-      initialRoute: 'pago_completo',
+      initialRoute: 'home',
       routes: {
         'home': (_) => HomePage(),
         'pago_completo': (_) => PagoCompletoPage(),

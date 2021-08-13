@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_stripe_app/data/tarjetas.dart';
+import 'package:flutter_stripe_app/helpers/helpers.dart';
 import 'package:flutter_stripe_app/helpers/navegar_fadein.dart';
 import 'package:flutter_stripe_app/pages/tarjeta_page.dart';
 import 'package:flutter_stripe_app/widgets/total_pay_button.dart';
@@ -15,7 +16,11 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () async {
+              mostrarAlerta(context, 'Título', 'Mensaje');
+              // await Future.delayed(const Duration(milliseconds: 2000));
+              // Navigator.pop(context);
+            },
           ),
         ],
       ),
