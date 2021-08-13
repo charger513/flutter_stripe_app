@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe_app/bloc/pagar/pagar_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TotalPayButton extends StatelessWidget {
@@ -18,41 +20,54 @@ class TotalPayButton extends StatelessWidget {
           topRight: Radius.circular(30),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+      child: BlocBuilder<PagarBloc, PagarState>(
+        builder: (context, state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Total',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "\$${state.montoPagar.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                '249.99 USD',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+              _BtnPay(
+                tarjetaActiva: state.tarjetaActiva,
               ),
             ],
-          ),
-          const _BtnPay(),
-        ],
+          );
+        },
       ),
     );
   }
 }
 
 class _BtnPay extends StatelessWidget {
-  const _BtnPay({Key? key}) : super(key: key);
+  const _BtnPay({
+    Key? key,
+    required this.tarjetaActiva,
+  }) : super(key: key);
+
+  final bool tarjetaActiva;
 
   @override
   Widget build(BuildContext context) {
-    return true ? buildBotonTarjeta(context) : buildAppleAndGooglePay(context);
+    return tarjetaActiva
+        ? buildBotonTarjeta(context)
+        : buildAppleAndGooglePay(context);
   }
 
   Widget buildAppleAndGooglePay(BuildContext context) {

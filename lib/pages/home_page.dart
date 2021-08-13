@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:flutter_stripe_app/bloc/pagar/pagar_bloc.dart';
 import 'package:flutter_stripe_app/data/tarjetas.dart';
 import 'package:flutter_stripe_app/helpers/helpers.dart';
 import 'package:flutter_stripe_app/helpers/navegar_fadein.dart';
@@ -17,9 +19,7 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () async {
-              mostrarAlerta(context, 'Título', 'Mensaje');
-              // await Future.delayed(const Duration(milliseconds: 2000));
-              // Navigator.pop(context);
+              //
             },
           ),
         ],
@@ -48,6 +48,9 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
+                    context.read<PagarBloc>().add(
+                          OnSeleccionarTarjeta(tarjeta),
+                        );
                     Navigator.push(context,
                         navegarFadeIn(context, TarjetaPage(tarjeta: tarjeta)));
                   },
