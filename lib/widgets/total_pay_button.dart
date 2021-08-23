@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe_app/bloc/pagar/pagar_bloc.dart';
+import 'package:flutter_stripe_app/helpers/helpers.dart';
+import 'package:flutter_stripe_app/services/stripe_service.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 
 class TotalPayButton extends StatelessWidget {
   @override
@@ -37,7 +40,7 @@ class TotalPayButton extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "\$${state.montoPagar.toStringAsFixed(2)}",
+                    "\$${state.montoPagar.toStringAsFixed(2)} ${state.moneda}",
                     style: const TextStyle(
                       fontSize: 20,
                     ),
@@ -126,7 +129,36 @@ class _BtnPay extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () {},
+      onPressed: () async {
+        mostrarLoading(context);
+
+        final stripeService = StripeService();
+        final state = context.read<PagarBloc>().state;
+        final tarjeta = state.tarjeta!;
+        final mesAnio = tarjeta.expiracyDate.split('/');
+
+        final resp = await stripeService.pagarConTarjetaExistente(
+          amount: state.montoPagarString,
+          currency: state.moneda,
+          card: CreditCard(
+            number: tarjeta.cardNumber,
+            expMonth: int.parse(mesAnio[0]),
+            expYear: int.parse(mesAnio[1]),
+          ),
+        );
+
+        Navigator.pop(context);
+
+        if (resp.ok) {
+          mostrarAlerta(context, 'Tarjeta OK', "Correcto");
+        } else {
+          mostrarAlerta(
+            context,
+            'Algo salió mal',
+            resp.msg ?? 'Error desconocido',
+          );
+        }
+      },
     );
   }
 }
