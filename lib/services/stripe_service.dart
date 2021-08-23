@@ -45,12 +45,13 @@ class StripeService {
       final paymentMethod = await StripePayment.paymentRequestWithCardForm(
           CardFormPaymentRequest());
 
-      final resp = await _crearPaymentIntent(
+      final resp = await _realizarPago(
         amount: amount,
         currency: currency,
+        paymentMethod: paymentMethod,
       );
 
-      return StripeCustomResponse(ok: true);
+      return resp;
     } catch (e) {
       return StripeCustomResponse(ok: false, msg: e.toString());
     }
@@ -61,7 +62,7 @@ class StripeService {
     required String currency,
   }) async {}
 
-  Future _crearPaymentIntent({
+  Future<PaymentIntentResponse> _crearPaymentIntent({
     required String amount,
     required String currency,
   }) async {
@@ -85,9 +86,38 @@ class StripeService {
     }
   }
 
-  Future _realizarPago({
+  Future<StripeCustomResponse> _realizarPago({
     required String amount,
     required String currency,
     required PaymentMethod paymentMethod,
-  }) async {}
+  }) async {
+    try {
+      final paymentIntent = await _crearPaymentIntent(
+        amount: amount,
+        currency: currency,
+      );
+
+      final paymentResult = await StripePayment.confirmPaymentIntent(
+        PaymentIntent(
+          clientSecret: paymentIntent.clientSecret,
+          paymentMethodId: paymentMethod.id,
+        ),
+      );
+
+      if (paymentResult.status == 'succeeded') {
+        return StripeCustomResponse(ok: true);
+      } else {
+        return StripeCustomResponse(
+          ok: true,
+          msg: 'Falló: ${paymentResult.status}',
+        );
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      return StripeCustomResponse(
+        ok: false,
+        msg: e.toString(),
+      );
+    }
+  }
 }
